@@ -1,0 +1,19 @@
+{
+  "input": {
+    "path":   "D:\\Audio CDs\\#",
+    "delim":  "#",
+    "cover":  "Cover.jpg",
+    "format": {
+      "artist": 0,
+      "album": 1,
+      "genre": 2,
+      "year": 3,
+      "track": 4,
+      "title": 5
+    }
+  },
+  "output": {
+    "path":   "D:\\mp3",
+    "format": "%genre%\\%artist%\\%year% - %album%\\%track% - %title%"
+  }
+}

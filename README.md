@@ -8,7 +8,7 @@ This utility scans a folder for input files, compresses them according to the se
 
 As of 20 Aug. 2019 this project is a Work in Progress. It will have several milestones:
 
-1) Simple synchronous implementation to get up and running quickly. That means while scanning a directory a found file is immediately converted, blocking until conversion finishes.
+1) ✓ Simple synchronous implementation to get up and running quickly. That means while scanning a directory a found file is immediately converted, blocking until conversion finishes.
 2) Introduce a simple multi-threading model to improve performance.
 3) Investigate and implement Kotlin Coroutines
 
@@ -56,8 +56,8 @@ audio-konverter uses two configuration files, each for a specific purpose. One c
             "album": <int: index position>,
             "genre": <int: index position>,
             "year": <int: index position>,
-            "number": <int: index position>,
-            "name": <int: index position>
+            "track": <int: index position>,
+            "title": <int: index position>
         }
     },
     "output": {
@@ -77,7 +77,7 @@ Since command line converters don't always use the same syntax every converter h
 
 ```json
 {
-    "args": "<string: format of the command line>",
+    "args": ["<string: format of the command line>"],
     "bin":  "<string: path to the executable>",
     "ext":  "<string: the file extension>"
 }
@@ -124,11 +124,13 @@ An example filename looks like this:
 
 **mp3.json**
 ```json
-    "args": "-V1 %input% %output%",
+{
+    "args": ["-V1", "%input%", "%output%"],
     "bin":  "C:\\Applications\\lame.exe",
     "ext":  "mp3"
+}
 ```
 
 **Start conversion**
 
-    audio-konverter app.json mp3.json
+    java -jar audio-konverter-1.0-SNAPSHOT-jar-with-dependencies.jar app.json mp3.json
