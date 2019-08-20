@@ -9,8 +9,9 @@ This utility scans a folder for input files, compresses them according to the se
 As of 20 Aug. 2019 this project is a Work in Progress. It will have several milestones:
 
 1) ✓ Simple synchronous implementation to get up and running quickly. That means while scanning a directory a found file is immediately converted, blocking until conversion finishes.
-2) Introduce a simple multi-threading model to improve performance.
-3) Investigate and implement Kotlin Coroutines
+2) Write audio tags.
+3) Introduce a simple multi-threading model to improve performance.
+4) Investigate and implement Kotlin Coroutines.
 
 This file will be updated accordingly.
 
