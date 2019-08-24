@@ -1,31 +1,30 @@
 package com.thecodeslinger.audiokonverter
 
 import java.io.File
-import java.nio.file.Paths
 
-class Scanner(
-    private val config: InputConfig,
-    private val converter: Converter,
-    private val fileNamer: FileNamer) {
+/**
+ * Recursively scan the configured folder and convert any found file to a compressed
+ * audio format.
+ *
+ * Note that a certain file hygiene is required or else the process will fail
+ * unexpectedly. Other than an album cover and audio files nothing else should
+ * reside in the folders that are scanned.
+ */
+class Scanner(private val config: InputConfig, private val converter: Converter) {
     
+    /**
+     * Execute the recursive scan.
+     */
     fun run() {
         val dir = File(config.path)
-        dir.walkTopDown().forEach { sourceFile ->
-            if (sourceFile.isFile && sourceFile.name != config.cover) {
-                val tags = fileNamer.parse(sourceFile)
-                val outFile = fileNamer.createOutputFile(tags)
-                if (!outFile.exists()) {
-                    val path = File(outFile.parent)
-                    if (!path.exists()) {
-                        if (!path.mkdirs()) {
-                            println("ERROR Create output dir ${path.absolutePath} failed ")
-                        }
-                    }
-                    
-                    converter.convert(sourceFile, outFile)
-                    println("Converted ${sourceFile.absolutePath}")
-                }
-            }
-        }
+        dir.walkTopDown().filter(::isEligibleFile).forEach(converter::convert)
+    }
+    
+    /**
+     * Return `true` if `file` is not a directory and its name does not match the
+     * configured name of the album cover file.
+     */
+    private fun isEligibleFile(file: File) : Boolean {
+        return file.isFile && file.name != config.cover
     }
 }

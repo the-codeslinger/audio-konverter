@@ -3,6 +3,9 @@ package com.thecodeslinger.audiokonverter
 import com.beust.klaxon.Klaxon
 import java.io.File
 
+/**
+ * Sets up the application and runs it.
+ */
 fun main(args: Array<String>) {
     if (args.size != 2) {
         println("Invalid arguments")
@@ -13,7 +16,7 @@ fun main(args: Array<String>) {
     
     val parser = Klaxon()
     val appConfig = parser.parse<AppConfig>(File(args[0]))
-    val converterConfig = parser.parse<ConverterConfig>(File(args[1]))
+    val converterConfig = parser.parse<EncoderConfig>(File(args[1]))
     
     if (null == appConfig) {
         println("No app config")
@@ -25,8 +28,9 @@ fun main(args: Array<String>) {
         return
     }
     
-    val filenameParser = FileNamer(appConfig.input, appConfig.output, converterConfig.ext)
-    val converter = Converter(converterConfig)
-    val scanner = Scanner(appConfig.input, converter, filenameParser)
+    val fileNamer = FileNamer(appConfig.input, appConfig.output, converterConfig.ext)
+    val encoder = Encoder(converterConfig)
+    val converter = Converter(encoder, fileNamer)
+    val scanner = Scanner(appConfig.input, converter)
     scanner.run()
 }

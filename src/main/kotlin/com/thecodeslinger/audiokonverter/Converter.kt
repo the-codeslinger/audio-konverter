@@ -2,26 +2,33 @@ package com.thecodeslinger.audiokonverter
 
 import java.io.File
 
-class Converter(private val config: ConverterConfig) {
+/**
+ * Takes a single file, parses the filename to extract the tags and creates the
+ * output filename to which the compressed audio shall be written. Then the source
+ * file is encoded to the compressed audio.
+ *
+ * Any intermediate folders are created if the do not exist already. Already existing
+ * files will be skipped.
+ */
+class Converter(private val encoder: Encoder, private val fileNamer: FileNamer) {
     
-    fun convert(source: File, destination: File) {
-        val args = mutableListOf<String>()
-        args.add(config.bin)
-        config.args.forEach {
-            when (it) {
-                "%input%" -> args.add("\"${source.absolutePath}\"")
-                "%output%" -> args.add("\"${destination.absolutePath}\"")
-                else -> args.add(it)
+    /**
+     * Convert a single file to compressed audio.
+     */
+    fun convert(sourceFile: File) {
+        val tags = fileNamer.parse(sourceFile)
+        val outFile = fileNamer.createOutputFile(tags)
+        if (!outFile.exists()) {
+            val path = File(outFile.parent)
+            if (!path.exists()) {
+                if (!path.mkdirs()) {
+                    println("ERROR Create output dir ${path.absolutePath} failed ")
+                    return
+                }
             }
-        }
-        
-        val process = ProcessBuilder(args)
-            .redirectOutput(ProcessBuilder.Redirect.DISCARD)
-            .redirectError(ProcessBuilder.Redirect.INHERIT)
-            .start()
-        
-        if (0 != process.waitFor()) {
-            println("ERROR ${source.absolutePath}")
+            
+            encoder.encode(sourceFile, outFile)
+            println("Converted ${sourceFile.absolutePath}")
         }
     }
 }
