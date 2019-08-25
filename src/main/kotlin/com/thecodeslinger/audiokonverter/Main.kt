@@ -30,7 +30,8 @@ fun main(args: Array<String>) {
     
     val fileNamer = FileNamer(appConfig.input, appConfig.output, converterConfig.ext)
     val encoder = Encoder(converterConfig)
-    val converter = Converter(encoder, fileNamer)
+    val tagger = Tagger()
+    val converter = Converter(appConfig.input, encoder, fileNamer, tagger)
     val scanner = Scanner(appConfig.input, converter)
     scanner.run()
 }

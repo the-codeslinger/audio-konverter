@@ -1,5 +1,7 @@
 package com.thecodeslinger.audiokonverter
 
+import java.io.File
+
 /**
  * Contains all supported tags that are written to a compressed audio file.
  *
@@ -12,4 +14,5 @@ data class Tags(
     var genre: String = "",
     var year: String = "",
     var track: String = "",
-    var title: String = "")
+    var title: String = "",
+    var cover: File? = null)
