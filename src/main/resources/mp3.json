@@ -1,5 +1,5 @@
 {
-  "args": ["-V1", "%input%", "%output%"],
+  "args": ["-V1", "--quiet", "%input%", "%output%"],
   "bin":  "C:\\Applications\\lame\\lame.exe",
   "ext":  "mp3"
 }
