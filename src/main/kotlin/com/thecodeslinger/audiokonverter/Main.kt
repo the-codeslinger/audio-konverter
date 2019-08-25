@@ -9,14 +9,24 @@ import java.io.File
 fun main(args: Array<String>) {
     if (args.size != 2) {
         println("Invalid arguments")
-        return;
+        return
     }
     
-    // TODO Proper input validation. File exists etc.
+    val appConfigFile = File(args[0])
+    if (!appConfigFile.exists()) {
+        print("App-config file not found at ${args[0]}")
+        return
+    }
+    
+    val encoderConfigFile = File(args[1])
+    if (!encoderConfigFile.exists()) {
+        print("Encoder-config file not found at ${args[1]}")
+        return
+    }
     
     val parser = Klaxon()
-    val appConfig = parser.parse<AppConfig>(File(args[0]))
-    val converterConfig = parser.parse<EncoderConfig>(File(args[1]))
+    val appConfig = parser.parse<AppConfig>(appConfigFile)
+    val converterConfig = parser.parse<EncoderConfig>(encoderConfigFile)
     
     if (null == appConfig) {
         println("No app config")
