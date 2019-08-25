@@ -6,10 +6,10 @@ This utility scans a folder for input files, compresses them according to the se
 
 ## Project Status
 
-As of 20 Aug. 2019 this project is a Work in Progress. It will have several milestones:
+As of 25 Aug. 2019 this project is a Work in Progress. It will have several milestones:
 
 1) ✓ Simple synchronous implementation to get up and running quickly. That means while scanning a directory a found file is immediately converted, blocking until conversion finishes.
-2) Write audio tags.
+2) ✓ Write audio tags.
 3) Introduce a simple multi-threading model to improve performance.
 4) Investigate and implement Kotlin Coroutines.
 
@@ -72,9 +72,9 @@ The JSON description should be quite self-explanatory. One note about the "forma
 
 The output format uses the same placeholder names that can be found in the "format" object. Simply surround them with "%" and that's it. This can be used to create a complex folder structure or a simple file name. It is important to understand that this string is appended to the output path.
 
-### Converter
+### Encoder
 
-Since command line converters don't always use the same syntax every converter has to be configured.
+Since command line encoders don't always use the same syntax every encoders has to be configured.
 
 ```json
 {
@@ -86,7 +86,7 @@ Since command line converters don't always use the same syntax every converter h
 
 The configuration is very simple.
 
-* "args" defines the command line of the converter. It expects two placeholders that are replaced with the source file and destination file by audio-konverter. If a converter does not support specifying input and output then it will not work with audio-konverter.
+* "args" defines the command line of the encoder. It expects two placeholders that are replaced with the source file and destination file by audio-konverter. If an encoder does not support specifying input and output then it will not work with audio-konverter.
     * %input%: The input or source *.wav file.
     * %output%: The compressed output file.
 * "bin" defines the path to the executable that shall be used for converting the files.
