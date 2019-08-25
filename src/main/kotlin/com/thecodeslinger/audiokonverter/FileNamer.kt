@@ -19,24 +19,24 @@ class FileNamer(
         val tags = Tags()
         val filename = file.nameWithoutExtension
         val pieces = filename.split(inputConfig.delim)
-        
-        if (null != inputConfig.format.artist) {
-            tags.artist = pieces[inputConfig.format.artist]
+    
+        inputConfig.format.artist?.let {
+            tags.artist = replaceEncodeChars(pieces[it])
         }
-        if (null != inputConfig.format.album) {
-            tags.album = pieces[inputConfig.format.album]
+        inputConfig.format.album?.let {
+            tags.album = replaceEncodeChars(pieces[it])
         }
-        if (null != inputConfig.format.genre) {
-            tags.genre = pieces[inputConfig.format.genre]
+        inputConfig.format.genre?.let {
+            tags.genre = replaceEncodeChars(pieces[it])
         }
-        if (null != inputConfig.format.year) {
-            tags.year = pieces[inputConfig.format.year]
+        inputConfig.format.title?.let {
+            tags.title = replaceEncodeChars(pieces[it])
         }
-        if (null != inputConfig.format.track) {
-            tags.track = pieces[inputConfig.format.track]
+        inputConfig.format.year?.let {
+            tags.year = pieces[it]
         }
-        if (null != inputConfig.format.title) {
-            tags.title = pieces[inputConfig.format.title]
+        inputConfig.format.track?.let {
+            tags.track = pieces[it]
         }
         return tags
     }
@@ -46,17 +46,35 @@ class FileNamer(
      */
     fun createOutputFile(tags: Tags) : File {
         val formatted = outputConfig.format
-            .replace("%artist%", tags.artist)
-            .replace("%album%", tags.album)
-            .replace("%genre%", tags.genre)
+            .replace("%artist%", replaceForbiddenChars(tags.artist))
+            .replace("%album%", replaceForbiddenChars(tags.album))
+            .replace("%genre%", replaceForbiddenChars(tags.genre))
             .replace("%year%", tags.year)
             .replace("%track%", tags.track)
-            .replace("%title%", tags.title)
+            .replace("%title%", replaceForbiddenChars(tags.title))
         return if (outputConfig.path.endsWith(File.separator)) {
             File(outputConfig.path + formatted + "." + outExt)
         }
         else {
             File(outputConfig.path + File.separator + formatted + "." + outExt)
         }
+    }
+    
+    /**
+     * Replaces the encoded values:
+     * * &47; -> /
+     * * &58; -> :
+     * * &63; -> ?
+     * * &92; -> \
+     */
+    private fun replaceEncodeChars(value: String) : String {
+        return value.replace("&47;", "/").replace("&58;", ":").replace("&63;", "?").replace("&92;", "\\")
+    }
+    
+    /**
+     * Replaces the values that are not supported on (NTFS and in parts other) filesystems with "_".
+     */
+    private fun replaceForbiddenChars(value: String) : String {
+        return value.replace("/", "_").replace(":", "_").replace("?", "_").replace("\\", "_")
     }
 }
